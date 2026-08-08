@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 int count = 0;
 int binary(int n, int arr[], int fin)
 {
@@ -49,6 +50,7 @@ int main()
     scanf("%d", &f);
 
     int result = binary(n, arr, f);
+    int re= log2(n);
     if (result == 1)
     {
         printf("the element is present. the number of comparison is %d\n", count);
@@ -57,7 +59,7 @@ int main()
         {
             printf("the best case. the number of comparison is %d\n", count);
         }
-        else if (count == n - 1)
+        else if (count == re)
         {
             printf("the worst case. the number of comparison is %d\n", count);
         }
