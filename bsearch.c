@@ -50,7 +50,7 @@ int main()
     scanf("%d", &f);
 
     int result = binary(n, arr, f);
-    int re= log2(n);
+    int re= log2(n)+1;
     if (result == 1)
     {
         printf("the element is present. the number of comparison is %d\n", count);
