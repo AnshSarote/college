@@ -33,7 +33,7 @@ int main()
 
     if (result == 1)
     {
-        printf("the element is present. the number of comparison is %d\n", count);
+        printf("the element is present.\n" );
 
         if (count == 1)
         {
@@ -43,9 +43,12 @@ int main()
         {
             printf("the worst case. the number of comparison is %d\n", count);
         }
-        else
+        else if(count == (n+1)/2)
         {
             printf("the average case. the number of comparison is %d\n", count);
+        }
+        else {
+            printf("this is the intermediate case. the number of comparison is %d\n",count);
         }
     }
     else
