@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <string.h>
+void selection(char str[][50], int n)
+{
+    char min[50];
+    int loc;
+    char temp[50];
+    for (int i = 0; i < n - 1; i++)
+    {
+        strcpy(min, str[i]);
+        loc = i;
+        for (int j = i + 1; j < n; j++)
+        {
+            if (strcmp(str[j], min) < 0)
+            {
+                strcpy(min, str[j]);
+                loc = j;
+            }
+        }
+        strcpy(temp, str[i]);
+        strcpy(str[i], str[loc]);
+        strcpy(str[loc], temp);
+        printf("pass %d \n", i);
+        for (int a = 0; a < n; a++)
+        {
+            if (a == n - 1)
+            {
+
+                printf("%s \n", str[a]);
+            }
+            else
+            {
+                printf("%s ", str[a]);
+            }
+        }
+    }
+}
+int main()
+{
+    int n;
+    printf("Enter the number of strings: ");
+    scanf("%d", &n);
+
+    char str[n][50];
+
+    printf("Enter %d strings:\n", n);
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("enter the %d element: ", i + 1);
+        scanf("%s", str[i]);
+    }
+    selection(str, n);
+    printf("Sorted array\n");
+    for (int g = 0; g < n; g++)
+    {
+        printf("%s ,", str[g]);
+    }
+}
