@@ -1,176 +1,236 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-#include <stdio.h> 
-#include <string.h> 
-#include <ctype.h> 
-char stk[100]; 
-int top=-1; 
-int estk[100]; 
-int etop=-1; 
+char stk[100];
+int top=-1;
+
+int estk[100];
+int etop=-1;
+
 void push(char x)
-{    top++; 
-    stk[top]=x;   } 
-char pop()   { 
-    char x; 
-    x=stk[top];   top--; 
-    return x;  }
-char peek()  { 
-    return stk[top];   } 
-int priority(char x)   { 
-    if (x=='+'|| x=='-')
-    {   return 1;  } 
-    if (x=='*'|| x== '/')
-    {  return 2;  } 
-    if (x=='^')
-    { return 3;  } 
-    return 0;      } 
+{
+    top++;
+    stk[top]=x;
+}
+
+char pop()
+{
+    char x;
+    x=stk[top];
+    top--;
+    return x;
+}
+
+char peek()
+{
+    return stk[top];
+}
+
+int priority(char x)
+{
+    if(x=='+' || x=='-')
+    {
+        return 1;
+    }
+
+    if(x=='*' || x=='/')
+    {
+        return 2;
+    }
+
+    if(x=='^')
+    {
+        return 3;
+    }
+
+    return 0;
+}
+
 void infixtopostfix(char infix[], char postfix[])
-{     int i=0;      int j=0; 
-    while (infix[i]!= '\0')
-    { 
+{
+    int i=0;
+    int j=0;
+
+    push('(');
+
+    while(infix[i]!='\0')
+    {
         if(isdigit(infix[i]))
-        { 
+        {
             while(isdigit(infix[i]))
-            {     postfix[j]=infix[i]; 
-                j++; 
-                i++; 
-            } 
+            {
+                postfix[j]=infix[i];
+                j++;
+                i++;
+            }
+
             postfix[j]=' ';
             j++;
-        } 
-        else if(infix[i]== '(')
-        { 
-            push(infix[i]); 
-            i++; 
-        } 
-        else if(infix[i]== ')')
-        { 
-            while(top!=-1 && peek()!='(' )
-            { 
-                postfix[j]= pop(); 
-                j++; 
-                postfix[j] = ' ';
-                j++;
-            } 
-            pop(); 
-            i++; 
-        } 
-        else if(infix[i] == '+' || 
-                infix[i] == '-' || 
-                infix[i] == '*' || 
-                infix[i] == '/' || 
-                infix[i] == '^')
-        { 
-            while(top!=-1 && peek()!='(' &&
-                  priority(peek())>= priority(infix[i]))
-            {       postfix[j]=pop(); 
-                j++; 
-                postfix[j] = ' '; 
-                j++; 
-            }
-            push(infix[i]); 
-            i++; 
-        }  
-        else
-        { 
+        }
+
+        else if(infix[i]=='(')
+        {
+            push(infix[i]);
             i++;
         }
-    }  
-    while (top!=-1)
-    {  postfix[j] = pop(); 
-        j++; 
-        postfix[j]= ' '; 
-        j++; 
-    } 
-    postfix[j] = '\0'; 
-}  
-void epush(int x)
-{ 
-    etop++; 
-    estk[etop] = x; 
-} 
-int epop()
-{ 
-    int x; 
-    x = estk[etop]; 
-    etop--; 
-    return x;  
-} 
 
-int evapostfix(char postfix[]) 
-{ 
-    int i=0; 
-    int num; 
-    int a,b; 
-    int result; 
+        else if(infix[i]==')')
+        {
+            while(top!=-1 && peek()!='(')
+            {
+                postfix[j]=pop();
+                j++;
 
-    while(postfix[i]!='\0')
-    { 
-        if(postfix[i]==' ')
-        { 
-            i++; 
-        } 
+                postfix[j]=' ';
+                j++;
+            }
 
-        else if(isdigit(postfix[i]))
-        { 
-            num = 0; 
+            pop();
+            i++;
+        }
 
-            while(isdigit(postfix[i]))
-            { 
-                num=num*10+(postfix[i]-'0'); 
-                i++; 
-            } 
+        else if(infix[i]=='+' ||
+                infix[i]=='-' ||
+                infix[i]=='*' ||
+                infix[i]=='/' ||
+                infix[i]=='^')
+        {
+            while(top!=-1 &&
+                  peek()!='(' &&
+                  priority(peek())>=priority(infix[i]))
+            {
+                postfix[j]=pop();
+                j++;
 
-            epush(num);
-        } 
+                postfix[j]=' ';
+                j++;
+            }
+
+            push(infix[i]);
+            i++;
+        }
 
         else
-        { 
-            b=epop(); 
-            a=epop(); 
+        {
+            i++;
+        }
+    }
+
+    postfix[j]='\0';
+}
+
+void epush(int x)
+{
+    etop++;
+    estk[etop]=x;
+}
+
+int epop()
+{
+    int x;
+
+    x=estk[etop];
+    etop--;
+
+    return x;
+}
+
+int evapostfix(char postfix[])
+{
+    int i=0;
+    int num;
+    int a,b;
+    int result;
+
+    while(postfix[i]!=')')       
+    {
+        if(postfix[i]==' ')
+        {
+            i++;
+        }
+
+        else if(isdigit(postfix[i]))
+        {
+            num=0;
+
+            while(isdigit(postfix[i]))
+            {
+                num=num*10+(postfix[i]-'0');
+                i++;
+            }
+
+            epush(num);
+        }
+
+        else
+        {
+            b=epop();
+            a=epop();
 
             switch(postfix[i])
-            { 
-                case'+': 
-                    result=a+b; 
-                    break; 
- 
-                case '-': 
-                    result = a - b; 
-                    break; 
- 
-                case '*': 
-                    result = a * b; 
-                    break; 
- 
-                case '/': 
-                    result = a / b; 
-                    break; 
- 
-                case '^': 
-                    result = 1; 
- 
-                    for (int k = 0; k < b; k++) 
-                    { 
-                        result = result * a; 
-                    } 
- 
-                    break; 
-            } 
+            {
+                case '+':
+                    result=a+b;
+                    break;
 
-            epush(result); 
-            i++; 
-        } 
-    }     return epop();    } 
+                case '-':
+                    result=a-b;
+                    break;
+
+                case '*':
+                    result=a*b;
+                    break;
+
+                case '/':
+                    result=a/b;
+                    break;
+
+                case '^':
+                    result=1;
+
+                    for(int k=0; k<b; k++)
+                    {
+                        result=result*a;
+                    }
+
+                    break;
+            }
+
+            epush(result);
+            i++;
+        }
+    }
+
+    return epop();
+}
+
 int main()
-{ 
-    char infix[100]; 
-    char postfix[100]; 
-    printf("enter the infix expression\n"); 
-    scanf(" %[^\n]",infix); 
-    top =-1; 
-    infixtopostfix(infix,postfix); 
-    printf("postfix expression: %s \n", postfix); 
-    etop=-1; 
-    printf("result : %d \n", evapostfix(postfix)); 
-    return 0; 
+{
+    char infix[100];
+    char expression[102];
+    char postfix[100];
+
+    printf("enter the infix expression\n");
+    scanf(" %[^\n]",infix);
+
+    expression[0]='(';
+
+    strcpy(expression+1,infix);
+
+    strcat(expression,")");
+
+    top=-1;
+
+    infixtopostfix(expression,postfix);
+
+    printf("postfix expression: %s\n",postfix);
+
+    strcat(postfix,")");       
+
+    etop=-1;
+
+    printf("result : %d\n",evapostfix(postfix));
+
+    return 0;
 }
