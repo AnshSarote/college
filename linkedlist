@@ -1,0 +1,195 @@
+#include <stdio.h>
+#include <stdlib.h> 
+
+struct node {
+    int data;
+    struct node *link;
+};
+
+struct node* createnode(int data) {
+    struct node* newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = data;
+    newnode->link= NULL;
+    return newnode;
+}
+void insbegin(struct node**start, int data)
+{
+    struct node* newnode = createnode(data);
+    newnode ->link= *start;
+    *start = newnode;
+}
+void  insend(struct node**start, int data)
+{
+    struct node* newnode = createnode(data);
+    if (*start == NULL)
+    {
+        *start = newnode;
+    return;
+    }
+        struct node* temp =*start;
+    while (temp->link != NULL)
+        {
+            temp = temp->link;
+        }
+    temp->link =newnode;
+    
+}
+ void insanypos(struct node**start, int data, int pos){
+if (pos <1)
+{ 
+    printf("invalid position");
+}
+ if(pos==1)
+{
+    insbegin(start,data);
+    return;
+}
+struct node* newnode= createnode(data);
+struct node* temp = *start;
+for(int i; temp!=NULL && i<pos-1; i++)
+    {
+        temp= temp->link;
+    }
+if(temp == NULL)
+{
+    printf("postion out of range!\n");
+    return;
+}
+newnode->link=temp->link;
+temp->link = newnode;
+}
+
+void delbegin(struct node**start)
+{ if(*start == NULL)
+{
+    printf("list is empty!\n");
+    return;
+}
+    struct node* temp = *start;
+  *start = (*start)->link;
+  free(temp);
+}
+void delend(struct node**start)
+{
+    if(*start == NULL)
+    {
+        printf("List is empty!\n");
+        return;
+    }
+
+struct node* temp = *start;
+if(temp->link==NULL)
+{
+    free(temp);
+    *start = NULL;
+    return;
+}
+while(temp->link->link!= NULL)
+    {
+        temp = temp ->link;
+    }
+free(temp->link);
+temp->link = NULL;
+}
+void delanypos(struct node**start, int pos)
+{
+    if(*start==NULL)
+    {
+        printf("list is empty!\n");
+        return;
+    }
+    if(pos <1)
+    {
+        printf("invalid position!\n");
+        return;
+    }
+    struct node* temp = *start;
+    if(pos == 1)
+    {
+        *start = temp->link;
+        free(temp);
+        return;
+    }
+    for(int i =1 ; temp!=NULL && i<pos-1; i++)
+        {
+            temp = temp->link;
+        }
+    if(temp==NULL|| temp ->link==NULL)
+    {
+        printf("position out of range!\n");
+        return;
+    }
+    struct node* dnode=temp->link;
+    free(dnode);
+}
+void display (struct node* start)
+{
+    if(start == NULL){
+        printf("list is empty!\n");
+        return;
+    }
+    struct node* temp =start;
+    while(temp!=NULL)
+        {
+            printf("%d->", temp->data);
+            temp = temp->link;
+            
+        }
+    printf("NULL\n");
+}
+
+int main() {
+struct node* start = NULL;
+    int choice, data, pos;
+    while(1)
+        {
+            printf("1. insert number at beginning\n");
+            printf("2. insert number at end\n");
+            printf("3. insert number at position\n");
+            printf("4. delete the number in beginning \n");
+             printf("5. delete the number at end \n");
+             printf("6. delete the number at position \n");
+             printf("7. display\n");
+             printf("1. exit\n");
+            printf("enter your choice: ");
+            scanf("%d",&choice);
+
+            switch (choice)
+                {
+                    case 1: 
+                    printf("enter data: ");
+                    scanf("%d", &data);
+                    insbegin(&start,data);
+                    break;
+                    case 2: 
+                    printf("enter data : ");
+                    scanf("%d", &data);
+                    insend(&start,data);
+                    break;
+                    case 3: 
+                    printf("enter data and position: ");
+                    scanf("%d %d", &data, &pos);
+                    insanypos(&start,data, pos);
+                    break;
+                    case 4: 
+                    delbegin(&start);
+                    break;
+                    case 5: 
+                    delend(&start);
+                    break;
+                    case 6: 
+                    printf("enter position: ");
+                    scanf("%d", &pos);
+                    delanypos(&start,pos);
+                    break;
+                    case 7: 
+                    display(start);
+                    break;
+                case 8: 
+                    exit(0);
+                    default: 
+                    printf("invalid choice!\n");
+                }
+        }
+    return 0;
+}
