@@ -1,0 +1,211 @@
+#include <stdlib.h>
+#include <stdio.h>
+struct node{
+    int data;
+    struct node* prev;
+    struct node* next;
+};
+struct node* start =NULL;
+void insany()
+{
+    struct node* temp;
+    int pos;
+    struct node* newnode= (struct node*)malloc(sizeof(struct node));
+    printf("enter the data");
+    scanf("%d", &newnode ->data);
+    printf("enter the position");
+    scanf("%d", &pos)
+    if(pos<-1)
+    {
+        printf("invalid position");
+        free(newnode);
+        return;
+        
+    }
+    if(pos == 1)
+    {
+        if(start==NULL)
+        {
+            newnode->prev= newnode;
+            newnode->next= newnode;
+            start = newnode;
+        }
+            temp = start;
+        else 
+        {
+            while(temp->next != start)
+                {
+                    temp= temp->next;
+                }
+        newnode->next= start;
+            newnode->prev= temp;
+            temp->next = newnode;
+            start->prev = newnode;
+            start= newnode;
+        }
+    printf("node inserted.");
+    }
+
+    if(pos >1)
+    {
+        if(start==NULL){
+            printf("list is empty, invalid position.");
+            return;
+        }
+      temp = start;
+        for(int i = 1; i<pos-1 && temp->next !=start, i++)
+            {
+                temp= temp->next;
+            }
+            if(i!=pos-1)
+            {
+                printf("invalid positon");
+                free(newnode);
+                return;
+            }
+        newnode->next = temp->next;
+    newnode->prev = temp;
+    temp->next->prev = newnode;
+    temp->next = newnode;
+    printf("Node inserted successfully!\n");
+    }
+}
+void insertEnd()
+{
+    struct node *newnode, *temp;
+    newnode = (struct node *)malloc(sizeof(struct node));
+    printf("Enter the number: ");
+    scanf("%d", &newnode->data);
+    if (start == NULL)
+    {
+        newnode->next = newnode;
+        newnode->prev = newnode;
+        start = newnode;
+    }
+    else
+    {
+        temp = start;
+        while (temp->next != start)
+        {
+            temp = temp->next;
+        }
+        newnode->next = start;
+        newnode->prev = temp;
+        temp->next = newnode;
+        start->prev = newnode;
+    }
+    printf("Node inserted at the end!\n");
+}
+
+void deletePosition()
+{
+    struct node *temp;
+    int pos, i;
+    if (start == NULL)
+    {
+        printf("List is empty!\n");
+        return;
+    }
+    printf("Enter the position to delete: ");
+    scanf("%d", &pos);
+    if (pos < 1)
+    {
+        printf("Invalid position!\n");
+        return;
+    }
+    temp = start;
+    if (pos == 1)
+    {
+        if (start->next == start)
+        {
+            free(start);
+            start = NULL;
+        }
+        else
+        {
+            struct node *last = start->prev;
+            start = start->next;
+            start->prev = last;
+            last->next = start;
+            free(temp);
+        }
+       printf("Node deleted successfully!\n");
+        return;
+    }
+    for (i = 1; i < pos && temp->next != start; i++)
+    {
+        temp = temp->next;
+    }
+    if (i != pos)
+    {
+        printf("Invalid position!\n");
+        return;
+    }
+    temp->prev->next = temp->next;
+    temp->next->prev = temp->prev;
+    free(temp);
+    printf("Node deleted successfully!\n");
+}
+void deleteEnd()
+{
+    struct node *temp;
+    if (start == NULL)
+    {
+        printf("List is empty!\n");
+        return;
+    }
+    temp = start;
+    if (start->next == start)
+    {
+        free(start);
+        start = NULL;
+    }
+    else
+    {
+        temp = start->prev;
+        temp->prev->next = start;
+        start->prev = temp->prev;
+        free(temp);
+    }
+    printf("Last node deleted successfully!\n");
+}
+int main()
+{
+    int choice;
+    while (1)
+    {
+        printf("\n--- Circular Doubly Linked List ---\n");
+        printf("1. Insert at specified position\n");
+        printf("2. Insert at ending position\n");
+        printf("3. Delete from specified position\n");
+        printf("4. Delete from ending position\n");
+        printf("5. Display\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+            case 1:
+                insertPosition();
+                break;
+            case 2:
+                insertEnd();
+                break;
+            case 3:
+                deletePosition();
+                break;
+            case 4:
+                deleteEnd();
+                break;
+            case 5:
+                display();
+                break;
+            case 6:
+                exit(0);
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+    return 0;
+}
+
