@@ -1,0 +1,164 @@
+
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+    int data;
+    Node *left, *right;
+};
+
+Node* insert(Node *root, int x)
+{
+    if (root == NULL)
+    {
+        Node *n = new Node;
+        n->data = x;
+        n->left = n->right = NULL;
+        return n;
+    }
+
+    if (x < root->data)
+        root->left = insert(root->left, x);
+    else if (x > root->data)
+        root->right = insert(root->right, x);
+
+    return root;
+}
+
+bool search(Node *root, int x)
+{
+    if (root == NULL)
+        return false;
+
+    if (root->data == x)
+        return true;
+
+    if (x < root->data)
+        return search(root->left, x);
+
+    return search(root->right, x);
+}
+
+Node* del(Node *root, int x)
+{
+    if (root == NULL)
+        return NULL;
+
+    if (x < root->data)
+        root->left = del(root->left, x);
+
+    else if (x > root->data)
+        root->right = del(root->right, x);
+
+    else
+    {
+        if (root->left == NULL)
+        {
+            Node *t = root->right;
+            delete root;
+            return t;
+        }
+
+        if (root->right == NULL)
+        {
+            Node *t = root->left;
+            delete root;
+            return t;
+        }
+
+        Node *t = root->right;
+
+        while (t->left != NULL)
+            t = t->left;
+
+        root->data = t->data;
+        root->right = del(root->right, t->data);
+    }
+
+    return root;
+}
+
+void inorder(Node *r)
+{
+    if (r != NULL)
+    {
+        inorder(r->left);
+        cout << r->data << " ";
+        inorder(r->right);
+    }
+}
+
+void preorder(Node *r)
+{
+    if (r != NULL)
+    {
+        cout << r->data << " ";
+        preorder(r->left);
+        preorder(r->right);
+    }
+}
+
+void postorder(Node *r)
+{
+    if (r != NULL)
+    {
+        postorder(r->left);
+        postorder(r->right);
+        cout << r->data << " ";
+    }
+}
+
+int main()
+{
+    Node *root = NULL;
+    int ch, x;
+
+    do
+    {
+        cout << "\n1.Insert  2.Search  3.Delete";
+        cout << "\n ----------------------------";
+        cout << "\n4.Inorder  5.Preorder  6.Postorder";
+          cout << "\n ----------------------------";
+        cout << "\n7.Exit";
+        cout << "\nEnter choice: ";
+        cin >> ch;
+
+        switch (ch)
+        {
+            case 1:
+                cout << "Enter value: ";
+                cin >> x;
+                root = insert(root, x);
+                break;
+
+            case 2:
+                cout << "Enter value: ";
+                cin >> x;
+                cout << (search(root, x) ? "node Found" : "node Not Found");
+                break;
+
+            case 3:
+                cout << "Enter value: ";
+                cin >> x;
+                root = del(root, x);
+                break;
+
+            case 4:
+                inorder(root);
+                break;
+
+            case 5:
+                preorder(root);
+                break;
+
+            case 6:
+                postorder(root);
+                break;
+            
+        }
+
+    } while (ch != 7);
+    cout <<" code stopped."
+    return 0;
+}
